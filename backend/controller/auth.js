@@ -2,7 +2,6 @@ const authModel = require("../models/auth");
 const jwt = require("jsonwebtoken");
 
 const createUser = async (req, res) => {
-  // res.send("Create User")
   try {
     const auth = await authModel.create(req.body);
     const token = auth.generateToken()
@@ -15,23 +14,53 @@ const createUser = async (req, res) => {
     }, {});
     if (error.name === "ValidationError") {
       return res.status(400).send({
-        status: "Failed",
+        status: "failed",
         message: error._message,
         data: errorMessages
       })
     }
     if (error.code === 11000 && error.keyValue["email"]) {
       return res.status(400).send({
-        status: "Failed",
+        status: "failed",
         message: "Email is already taken",
         data: null,
       })
     }
     res.status(500).send({
-      status: "Failed",
+      status: "failed",
       message: "Something went wrong, Please try again later"
     })
   }
 }
 
-module.exports = {createUser}
+const signin = async (req, res) => {
+  try {
+    const {email, password} = req.body;
+    if (!email || !password) {
+      return res.json({status: "failed", data: null, message: "Please provide email and password"})
+    }
+    if (!email.includes("@")) {
+      return res.json({status: "failed", data: null, message: "Invalid email address"})
+    }
+    const user = await authModel.find({email});
+    if (!user.length) {
+      return res.json({status: "failed", data: null, message: "User deosn't exist"})
+    }
+    const isPasswordValid = await user[0].verifyPassword(password);
+    if (!isPasswordValid) {
+      return res.json({status: "failed", data: null, message: "Incorrect Password"})
+    }
+    const token = user[0].generateToken()
+    res.status(201).json({
+      token,
+      user: {
+        name: user[0].name,
+        email: user[0].email,
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+module.exports = {createUser, signin}
