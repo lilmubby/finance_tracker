@@ -37,18 +37,18 @@ const signin = async (req, res) => {
   try {
     const {email, password} = req.body;
     if (!email || !password) {
-      return res.json({status: "failed", data: null, message: "Please provide email and password"})
+      return res.status(400).json({status: "failed", data: null, message: "Please provide email and password"})
     }
     if (!email.includes("@")) {
-      return res.json({status: "failed", data: null, message: "Invalid email address"})
+      return res.status(400).json({status: "failed", data: null, message: "Invalid email address"})
     }
     const user = await authModel.find({email});
     if (!user.length) {
-      return res.json({status: "failed", data: null, message: "User deosn't exist"})
+      return res.status(401).json({status: "failed", data: null, message: "User deosn't exist"})
     }
     const isPasswordValid = await user[0].verifyPassword(password);
     if (!isPasswordValid) {
-      return res.json({status: "failed", data: null, message: "Incorrect Password"})
+      return res.status(401).json({status: "failed", data: null, message: "Incorrect Password"})
     }
     const token = user[0].generateToken()
     res.status(201).json({
