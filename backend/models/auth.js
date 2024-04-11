@@ -29,8 +29,8 @@ authSchema.pre("save", async function() {
   this.password = await bcrypt.hash(this.password, salt)
 })
 
-authSchema.methods.verifyPassword = async function (password) {
-  const isMatch = bcrypt.compare(password, this.password);
+authSchema.methods.verifyPassword = async function (enteredPassword) {
+  const isMatch = bcrypt.compare(enteredPassword, this.password);
   return isMatch;
 }
 
