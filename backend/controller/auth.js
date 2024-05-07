@@ -1,11 +1,15 @@
-const authModel = require("../models/auth");
+const users = require("../models/auth");
 const jwt = require("jsonwebtoken");
 
 const createUser = async (req, res) => {
   try {
-    const auth = await authModel.create(req.body);
+    const auth = await users.create(req.body);
     const token = auth.generateToken()
-    res.send({ name: auth.name, email: auth.email, token })
+    res.send({
+      status: "Successful",
+      data: null,
+      message: "User created successfully"
+    })
   } catch (error) {
     console.log(error);
     const errorMessages = error && error?.errors && Object.entries(error?.errors).reduce((acc, [key, value]) => {
@@ -42,7 +46,7 @@ const signin = async (req, res) => {
     if (!email.includes("@")) {
       return res.status(400).json({status: "failed", data: null, message: "Invalid email address"})
     }
-    const user = await authModel.find({email});
+    const user = await users.find({email});
     if (!user.length) {
       return res.status(401).json({status: "failed", data: null, message: "User deosn't exist"})
     }
@@ -52,11 +56,12 @@ const signin = async (req, res) => {
     }
     const token = user[0].generateToken()
     res.status(201).json({
-      token,
-      user: {
+      status: "Successful",
+      data: {
         name: user[0].name,
         email: user[0].email,
-      }
+      },
+      token,
     });
   } catch (error) {
     console.log(error);
