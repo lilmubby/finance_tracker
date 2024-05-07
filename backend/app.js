@@ -5,6 +5,7 @@ const app = express()
 require("dotenv").config()
 const authRouter = require("./routes/auth");
 const expenseRouter = require("./routes/expense")
+const authMiddleware = require("./middleware/auth")
 
 
 const errorHandler = require("./middleware");
@@ -16,9 +17,8 @@ app.get("/", (req, res) => {
 })
 app.use(express.json())
 // app.use(express.urlencoded({extended: false}));
-const baseURI = "/api/v1"
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/expense", expenseRouter)
+app.use("/api/v1/expense", authMiddleware, expenseRouter);
 app.use(errorHandler)
 
 const runDb = async () => {

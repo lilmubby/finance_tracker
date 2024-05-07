@@ -1,13 +1,13 @@
 const expense = require("../models/expense");
-const jwt = require("jsonwebtoken");
 
 const addExpense = async (req, res) => {
   try {
-    const {authorization} = req.headers;
-    const token = authorization.split(" ")[1]
-    const payload = jwt.verify(token, process.env.JWT_KEY);    
-    const addExpense = await expense.create({...req.body, createdBy: payload.id})
-    res.status(201).json({addExpense});
+    await expense.create({...req.body, createdBy: req.payload.id})
+    res.status(201).json({
+      status: "Successful",
+      message: "Expense  updated successfully",
+      data: null
+    });
   } catch (error) {
     console.log(error);
     if (error.name === "TokenExpiredError") {
@@ -20,4 +20,27 @@ const addExpense = async (req, res) => {
   }
 }
 
-module.exports = {addExpense}
+const getAllExpense = async (req, res) => {
+  try {
+    const allExpense = await expense.find({});
+    if (!allExpense.length) {
+      return res.status(200).json({
+        status: "Success",
+        message: "Kindly add your expenditure",
+      })
+    }
+    
+    res.status(200).json({
+      status: "Success",
+      data: allExpense,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error,
+      status: "failed",
+      message: "Sorry, Something went wrong. Try again"
+    })
+  }
+}
+
+module.exports = {addExpense, getAllExpense}
