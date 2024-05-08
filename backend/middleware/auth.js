@@ -16,9 +16,8 @@ const auth = (req, res, next) => {
   } catch (error) {
     console.log(error);
     res.status(401).json({
-      error,
       status: "failed",
-      message: "Invalid credentials"
+      message: error.message || "Something went wrong. Please try again"
     })
   }
 }
