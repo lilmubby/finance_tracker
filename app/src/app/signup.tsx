@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, Alert, SafeAreaView, StatusBar, Image } from 'react-native'
 import React, { useState } from 'react'
 import { Link, useRouter } from 'expo-router';
 import { phoneIP, routerIP } from '@/src/constants/ip';
@@ -11,7 +11,7 @@ const signup = () => {
 
   const signupHandler = async () => {
     try {
-      const res = await fetch(`http://${phoneIP}:5000/api/v1/auth/signup`, {
+      const res = await fetch(`http://${routerIP}:5000/api/v1/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -36,9 +36,11 @@ const signup = () => {
 
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text>Name</Text>
+    <SafeAreaView style={styles.container}>
+      <Image source={require('@/assets/images/logo.jpg')} style={styles.image} />
+      <Text style={styles.header}>Sign Up</Text>
+      <View style={styles.inputWrapper}>
+        <Text style={styles.inputLabel}>Name</Text>
         <TextInput
           style={styles.input}
           onChangeText={setName}
@@ -47,8 +49,8 @@ const signup = () => {
           placeholderTextColor={"#000000"}
           />
       </View>
-      <View>
-        <Text>Email</Text>
+      <View style={styles.inputWrapper}>
+        <Text style={styles.inputLabel}>Email</Text>
         <TextInput
           style={styles.input}
           onChangeText={setEmail}
@@ -58,8 +60,8 @@ const signup = () => {
           keyboardType='email-address'
           />
       </View>
-      <View>
-        <Text>Password</Text>
+      <View style={styles.inputWrapper}>
+        <Text style={styles.inputLabel}>Password</Text>
         <TextInput
           style={styles.input}
           onChangeText={setPassword}
@@ -69,11 +71,14 @@ const signup = () => {
           secureTextEntry
           />
       </View>
-      <Button
-        title='Submit'
-        onPress={signupHandler}
-        />
-    </View>
+      <View style={styles.btn}>
+        <Button 
+          title='Submit'
+          onPress={signupHandler}
+          color={"white"}
+          />
+      </View>
+    </SafeAreaView>
   )
 }
 
@@ -82,11 +87,40 @@ export default signup
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: "white"
   },
   input: {
     height: 40,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical: 3,
     borderWidth: 2,
     padding: 10,
+    borderRadius: 10,
   },
+  image: {
+    height: 200,
+    width: "100%",
+    marginVertical: 10,
+  },
+  inputLabel: {
+    marginLeft: 18,
+    fontSize: 16,
+    fontWeight: "500"
+  },
+  inputWrapper: {
+    marginVertical: 8
+  },
+  header: {
+    fontSize: 40,
+    marginHorizontal: "auto",
+    margin: 16,
+    fontWeight: "600"
+  },
+  btn: {
+    backgroundColor: "#000",
+    width: "40%",
+    marginHorizontal: "auto",
+    borderRadius: 10,
+  }
 })
