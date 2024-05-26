@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button, Alert, SafeAreaView, StatusBar, Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, Alert, SafeAreaView, StatusBar, Image, Platform } from 'react-native'
 import React, { useState } from 'react'
 import { Link, useRouter } from 'expo-router';
 import { phoneIP, routerIP } from '@/src/constants/ip';
@@ -75,7 +75,7 @@ const signup = () => {
         <Button 
           title='Submit'
           onPress={signupHandler}
-          color={"white"}
+          color={Platform.OS === "ios" ? "white" : "black"}
           />
       </View>
     </SafeAreaView>
