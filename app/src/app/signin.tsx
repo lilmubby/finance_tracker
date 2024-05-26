@@ -71,7 +71,7 @@ const signin = () => {
         />
       </View>
       <View style={styles.btn}>
-        <Button title='Submit' color={Platform.OS === "ios" ? "white" : "black"} onPress={signInHandler} />
+        <Button title='Submit' color={Platform.OS === "ios" ? "white":"black"} onPress={signInHandler} />
       </View>
     </View>
   )
