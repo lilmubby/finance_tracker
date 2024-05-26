@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View, Image, StatusBar } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router';
 import { routerIP, phoneIP } from '@/src/constants/ip';
@@ -43,8 +43,10 @@ const signin = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text>Email</Text>
+      <Image source={require('@/assets/images/logo.jpg')} style={styles.image} />
+      <Text style={styles.header}>Sign In</Text>
+      <View style={styles.inputWrapper}>
+        <Text style={styles.inputLabel}>Email</Text>
         <TextInput 
           style={styles.input}
           onChangeText={setEmail}
@@ -56,8 +58,8 @@ const signin = () => {
           placeholderTextColor={"#000000"}
         />
       </View>
-      <View>
-        <Text>Password</Text>
+      <View style={styles.inputWrapper}>
+        <Text style={styles.inputLabel}>Password</Text>
         <TextInput 
           style={styles.input}
           onChangeText={setPassword}
@@ -68,7 +70,9 @@ const signin = () => {
           placeholderTextColor={"#000000"}
         />
       </View>
-      <Button title='Submit' onPress={signInHandler} />
+      <View style={styles.btn}>
+        <Button title='Submit' color={"white"} onPress={signInHandler} />
+      </View>
     </View>
   )
 }
@@ -78,12 +82,40 @@ export default signin
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "",
+    marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: "white"
+  },
+  header: {
+    fontSize: 40,
+    marginHorizontal: "auto",
+    margin: 16,
+    fontWeight: "600"
+  },
+  image: {
+    height: 200,
+    width: "100%",
+    marginVertical: 10,
   },
   input: {
     height: 40,
-    margin: 12,
+    marginHorizontal: 12,
+    marginVertical: 3,
     borderWidth: 2,
     padding: 10,
+    borderRadius: 10,
   },
+  inputLabel: {
+    marginLeft: 18,
+    fontSize: 16,
+    fontWeight: "500"
+  },
+  inputWrapper: {
+    marginVertical: 8
+  },
+  btn: {
+    backgroundColor: "#000",
+    width: "40%",
+    marginHorizontal: "auto",
+    borderRadius: 10,
+  }
 })
