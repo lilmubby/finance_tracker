@@ -1,4 +1,4 @@
-import { Alert, Button, StyleSheet, Text, TextInput, View, Image, StatusBar } from 'react-native'
+import { Alert, Button, StyleSheet, Text, TextInput, View, Image, StatusBar, Platform } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router';
 import { routerIP, phoneIP } from '@/src/constants/ip';
@@ -71,7 +71,7 @@ const signin = () => {
         />
       </View>
       <View style={styles.btn}>
-        <Button title='Submit' color={"white"} onPress={signInHandler} />
+        <Button title='Submit' color={Platform.OS === "ios" ? "white" : "black"} onPress={signInHandler} />
       </View>
     </View>
   )
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     marginVertical: 8
   },
   btn: {
-    backgroundColor: "#000",
+    backgroundColor: "black",
     width: "40%",
     marginHorizontal: "auto",
     borderRadius: 10,
