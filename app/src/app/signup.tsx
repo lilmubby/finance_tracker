@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, TextInput, Button, Alert, SafeAreaView, StatusBar, Image, Platform } from 'react-native'
 import React, { useState } from 'react'
-import { Link, useRouter } from 'expo-router';
-import { phoneIP, routerIP } from '@/src/constants/ip';
+import { useRouter } from 'expo-router';
+import { registerUserFn } from '../services/authServices';
+import { SignUpResponse } from '../types/auth';
 
 const signup = () => {
   const [name, setName] = useState("");
@@ -11,27 +12,13 @@ const signup = () => {
 
   const signupHandler = async () => {
     try {
-      const res = await fetch(`http://${routerIP}:5000/api/v1/auth/signup`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({name, email, password})
-      })
-      const data = await res.json()
-      console.log(res);
-      if (res.ok) {
-        Alert.alert(data.message)
-        router.push("signin")
-      } else {
-        Alert.alert("Sign In Failed", data.message || "An error occurred");
-      }
-      
+      const {message, status} = await registerUserFn<SignUpResponse>({name, email, password})
+      Alert.alert(message);
+      router.replace("signin")
     } catch (error: any) {
       console.log({error});
       Alert.alert("An error occurred", error.message);
     }
-    
   }
 
 
@@ -88,23 +75,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    paddingHorizontal: 20,
   },
   input: {
     height: 40,
     marginHorizontal: 12,
-    marginVertical: 3,
-    borderWidth: 2,
+    marginVertical: 8,
+    borderWidth: 1,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   image: {
     height: 200,
     width: "100%",
     marginVertical: 10,
+    resizeMode: 'contain',
   },
   inputLabel: {
-    marginLeft: 18,
+    marginLeft: 16,
     fontSize: 16,
     fontWeight: "500"
   },
