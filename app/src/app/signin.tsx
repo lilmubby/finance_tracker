@@ -1,7 +1,9 @@
 import { Alert, Button, StyleSheet, Text, TextInput, View, Image, StatusBar, Platform } from 'react-native'
 import React, { useState } from 'react'
 import { useRouter } from 'expo-router';
-import { routerIP, phoneIP } from '@/src/constants/ip';
+import { loginUserFn } from '../services/authServices';
+import { ApiResponse, LoginResponse } from '../types/auth';
+import { storeToken } from '../util/token';
 
 const signin = () => {
   const router = useRouter();
@@ -11,29 +13,15 @@ const signin = () => {
   const signInHandler = async () => {
     // Alert.alert("Sign In Successful");
     try {
-      const res = await fetch(`http://${phoneIP}:5000/api/v1/auth/signIn`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        // Assuming the token is returned in the response
-        const token = data.token;
-        console.log("Token:", token);
-        router.push("/home")
-
-        // Save the token in local storage or any state management library
-        // Here we're using AsyncStorage for simplicity
-        // await AsyncStorage.setItem('token', token);
-
-        // Navigate to home screen (assuming you have set up routing)
-        // router.push('/home');
-      } else {
-        Alert.alert("Sign In Failed", data.message || "An error occurred");
-      }
+      const {data, status} : ApiResponse<LoginResponse> = await loginUserFn<LoginResponse>({email, password})
+      
+      // Assuming the token is returned in the response
+      const token = data.token;        
+      // Save the token in local storage or any state management library
+      storeToken(token)
+      
+      // Navigate to home screen 
+      router.replace('/home');
     } catch (error: any) {
       console.log({error});
       Alert.alert("An error occurred", error.message);
@@ -83,7 +71,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    paddingHorizontal: 20,
   },
   header: {
     fontSize: 40,
@@ -95,17 +84,18 @@ const styles = StyleSheet.create({
     height: 200,
     width: "100%",
     marginVertical: 10,
+    resizeMode: 'contain',
   },
   input: {
     height: 40,
     marginHorizontal: 12,
-    marginVertical: 3,
-    borderWidth: 2,
+    marginVertical: 8,
+    borderWidth: 1,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 5,
   },
   inputLabel: {
-    marginLeft: 18,
+    marginLeft: 16,
     fontSize: 16,
     fontWeight: "500"
   },
