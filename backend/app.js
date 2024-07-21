@@ -8,7 +8,7 @@ const expenseRouter = require("./routes/expense")
 const authMiddleware = require("./middleware/auth")
 
 
-const errorHandler = require("./middleware");
+const errorHandler = require("./middleware/errorHandler");
 
 const port = process.env.PORT || 5000
 
@@ -29,7 +29,6 @@ const runDb = async () => {
     })
   } catch (error) {
     console.log({err: error});
-    // throw new Error(error)
   }
 }
 

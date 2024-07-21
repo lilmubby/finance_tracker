@@ -1,12 +1,13 @@
 const jwt = require("jsonwebtoken");
+const Unauthentitacated = require("../errors/unauthenticated");
 
 const auth = (req, res, next) => {
   try {
     const {authorization} = req.headers;
     if (!authorization || !authorization.startsWith("Bearer ")) {
-      throw new Error("Authentication failed")
+      throw new Error("Invalid Authentication")
     }
-    const token = authorization.split(" ")[1]
+    const token = authorization.split(" ")[1];
     const payload = jwt.verify(token, process.env.JWT_KEY);
     req.payload = {
       id: payload.id,
@@ -15,11 +16,10 @@ const auth = (req, res, next) => {
     next()
   } catch (error) {
     console.log(error);
-    res.status(401).json({
-      error,
-      status: "failed",
-      message: "Invalid credentials"
-    })
+    if (error.name === "JsonWebTokenError") {
+      throw new Unauthentitacated("Access token has expired", error)
+    }
+    throw new Unauthentitacated(error.message, error)
   }
 }
 
