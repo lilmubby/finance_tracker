@@ -17,7 +17,7 @@ const auth = (req, res, next) => {
   } catch (error) {
     console.log(error);
     if (error.name === "JsonWebTokenError") {
-      throw new Unauthentitacated("Access token has expired", error)
+      throw new Unauthentitacated("Authentication failed", error)
     }
     throw new Unauthentitacated(error.message, error)
   }
