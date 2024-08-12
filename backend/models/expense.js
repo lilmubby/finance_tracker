@@ -15,14 +15,14 @@ const expenseSchema = mongoose.Schema({
     type: String,
     default: "others",
   },
-  date: {
+  createdAt: {
     type: Date,
     default: new Date(),
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'auth',
-    required: [true, 'Please provide user'],
+    required: [true, 'User does not exist'],
   },
   from: {
     type: String,
