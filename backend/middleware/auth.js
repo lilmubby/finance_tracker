@@ -17,7 +17,13 @@ const auth = (req, res, next) => {
   } catch (error) {
     console.log(error);
     if (error.name === "JsonWebTokenError") {
-      throw new Unauthentitacated("Authentication failed", error)
+      throw new Unauthentitacated("Authentication Failed", error)
+    }
+    if (error.name === "TokenExpiredError") {
+      const data = {
+        expiredAt: error.expiredAt
+      }
+      throw new Unauthentitacated(error.message, data)
     }
     throw new Unauthentitacated(error.message, error)
   }
