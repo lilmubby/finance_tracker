@@ -5,11 +5,11 @@ const errorHandler = (err, req, res, next) => {
     msg: err.message || 'Something went wrong try again later',
   }
   const customJson ={
-    message: customError.msg
+    status: "failed",
+    message: customError.msg,
+    data: null
   }
-  if (err.error) {
-    customJson.error = err.error
-  } 
+  if (err.error && Object.keys(err.error).length) customJson.data = err.error 
 
   return res.status(customError.statusCode).json(customJson)
 }
