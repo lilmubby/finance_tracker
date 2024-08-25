@@ -15,10 +15,6 @@ const expenseSchema = mongoose.Schema({
     type: String,
     default: "others",
   },
-  createdAt: {
-    type: Date,
-    default: new Date(),
-  },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'auth',
@@ -35,7 +31,6 @@ const expenseSchema = mongoose.Schema({
 
 expenseSchema.pre("save",  function() {
   this.category = !this.category ? "others" : this.category;
-  this.date = !this.date ? new Date() : this.date;
 })
 
 module.exports = mongoose.model("expense", expenseSchema)
