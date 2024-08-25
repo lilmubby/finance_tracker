@@ -1,13 +1,15 @@
+const savings = require("../models/savings.models");
 const BadRequest = require("../errors/badRequest");
-const income = require("../models/income.models")
 
-const addIncome = async (req, res, next) => {
+const addSavings = async (req, res, next) => {
   try {
-    const dbIncome = await income.create({...req.body, createdBy: req.payload.id})
+    const dbSavings = await savings.create({
+      ...req.body, createdBy: req.payload.id
+    })
     res.status(201).json({
       status: "Successful",
-      message: "Income created successfully",
-      data: dbIncome
+      message: "Savings created successfully",
+      data: dbSavings
     });
   } catch (error) {
     console.log(error);
@@ -18,25 +20,24 @@ const addIncome = async (req, res, next) => {
   }
 }
 
-const getAllExpense = async (req, res, next) => {
+const getAllSavings = async (req, res, next) => {
   try {
-    const allIncome = await income.find({
+    const allSavings = await savings.find({
       createdBy: req.payload.id
-    });
-    if (!allIncome.length) {
+    })
+    if (!allSavings.length) {
       return res.status(200).json({
         status: "Successful",
-        message: "Kindly add your income"
+        message: "Kindly add your savings"
       })
     }
-
     res.status(200).json({
       status: "Successful",
-      data: allIncome
+      data: allSavings
     })
   } catch (error) {
     next(error)
   }
 }
 
-module.exports = {addIncome, getAllExpense}
+module.exports = { getAllSavings, addSavings}
