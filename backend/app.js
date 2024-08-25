@@ -14,6 +14,7 @@ const savingsRouter = require("./routes/savings.routes")
 // Middlewares Import
 const authMiddleware = require("./middleware/auth")
 const errorHandler = require("./middleware/errorHandler");
+const notFoundMiddleware = require("./middleware/not-found")
 
 
 app.get("/", (req, res) => {
@@ -33,5 +34,6 @@ app.use("/api/v1/savings", authMiddleware, savingsRouter)
 
 // Error Middleware
 app.use(errorHandler)
+app.use(notFoundMiddleware)
 
 module.exports = {app}
